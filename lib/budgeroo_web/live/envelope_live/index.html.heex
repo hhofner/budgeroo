@@ -1,0 +1,59 @@
+<h1>Listing Envelopes</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.envelope_index_path(@socket, :index)}>
+    <.live_component
+      module={BudgerooWeb.EnvelopeLive.FormComponent}
+      id={@envelope.id || :new}
+      title={@page_title}
+      action={@live_action}
+      envelope={@envelope}
+      return_to={Routes.envelope_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<%= if @live_action in [:add] do %>
+  <.modal return_to={Routes.envelope_index_path(@socket, :index)}>
+    <.live_component
+      module={BudgerooWeb.EnvelopeLive.FormModifyComponent}
+      id={@envelope.id || :new}
+      title={@page_title}
+      action={@live_action}
+      envelope={@envelope}
+      return_to={Routes.envelope_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Group</th>
+      <th>Amount</th>
+      <th>Goal</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="envelopes">
+    <%= for envelope <- @envelopes do %>
+      <tr id={"envelope-#{envelope.id}"}>
+        <td><%= envelope.name %></td>
+        <td><%= envelope.group %></td>
+        <td><%= envelope.amount %></td>
+        <td><%= envelope.goal %></td>
+
+        <td>
+          <span><%= live_patch "Add", to: Routes.envelope_index_path(@socket, :add, envelope) %></span>
+          <span><%= live_redirect "Show", to: Routes.envelope_show_path(@socket, :show, envelope) %></span>
+          <span><%= live_patch "Edit", to: Routes.envelope_index_path(@socket, :edit, envelope) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: envelope.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Envelope", to: Routes.envelope_index_path(@socket, :new) %></span>

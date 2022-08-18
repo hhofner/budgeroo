@@ -1,0 +1,41 @@
+<h1>Show Envelope</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.envelope_show_path(@socket, :show, @envelope)}>
+    <.live_component
+      module={BudgerooWeb.EnvelopeLive.FormComponent}
+      id={@envelope.id}
+      title={@page_title}
+      action={@live_action}
+      envelope={@envelope}
+      return_to={Routes.envelope_show_path(@socket, :show, @envelope)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @envelope.name %>
+  </li>
+
+  <li>
+    <strong>Group:</strong>
+    <%= @envelope.group %>
+  </li>
+
+  <li>
+    <strong>Amount:</strong>
+    <%= @envelope.amount %>
+  </li>
+
+  <li>
+    <strong>Goal:</strong>
+    <%= @envelope.goal %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.envelope_show_path(@socket, :edit, @envelope), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.envelope_index_path(@socket, :index) %></span>
